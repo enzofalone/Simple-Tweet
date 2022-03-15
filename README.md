@@ -39,7 +39,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+While creating this app, I had trouble creating the toolbar and positioning the twitter logo to one side, and following the walkthrough took me some time to get used to all the requests and understand everything that was being retrieved and passed into other objects
 
 ## Open-source libraries used
 

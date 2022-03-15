@@ -65,7 +65,6 @@ class TimelineActivity : AppCompatActivity() {
 
     fun populateHomeTimeline(isLoadMore: Boolean) {
         if(isLoadMore) {
-            Log.i(TAG, "hello world")
             client.getNextPageOfTweets(object: JsonHttpResponseHandler() {
                 override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
                     Log.i(TAG, "onSuccess $statusCode")
@@ -89,7 +88,6 @@ class TimelineActivity : AppCompatActivity() {
                 }
             }, adapter.getLastTweetId())
         } else {
-
             client.getHomeTimeline(object : JsonHttpResponseHandler() {
                 override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
                     Log.i(TAG, "onSuccess $statusCode")

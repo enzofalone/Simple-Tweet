@@ -70,7 +70,7 @@
 
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
         app:layout_constraintTop_toBottomOf="@id/tvUsername"
-        tools:text="Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello " />
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a laoreet lacus. Integer vestibulum ac purus sed egestas. In interdum tellus nulla, sit amet suscipit dolor convallis ac" />
 
     <TextView
         android:id="@+id/tvCreatedAt"

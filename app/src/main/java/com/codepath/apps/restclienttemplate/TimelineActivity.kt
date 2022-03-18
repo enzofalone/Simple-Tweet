@@ -55,7 +55,7 @@ class TimelineActivity : AppCompatActivity() {
         rvTweets.layoutManager = linearLayoutManager
         rvTweets.adapter = adapter
 
-        var scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        val scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
@@ -79,9 +79,27 @@ class TimelineActivity : AppCompatActivity() {
         if(item.itemId == R.id.compose) {
             //Redirect user to compose activity
             val intent = Intent(this, ComposeActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    //Method called back when the user comes from ComposeActivity
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CODE){
+            //get tweet object back from ComposeActivity
+            val tweet = data?.getParcelableExtra("tweet") as Tweet
+
+            //update timeline
+            //modify data source of tweets
+            tweets.add(0, tweet)
+            //update adapter
+            adapter.notifyItemInserted(0)
+            //scroll adapter back to the first position so we can see the tweet the user composed
+            rvTweets.smoothScrollToPosition(0)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     fun populateHomeTimeline(isLoadMore: Boolean) {
@@ -140,5 +158,6 @@ class TimelineActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "TimelineActivity"
+        const val REQUEST_CODE = 20
     }
 }

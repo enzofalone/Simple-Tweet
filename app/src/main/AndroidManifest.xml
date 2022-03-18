@@ -16,6 +16,7 @@
         <activity
             android:name=".ComposeActivity"
             android:exported="false"
+            android:label="Compose a tweet"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".TimelineActivity"

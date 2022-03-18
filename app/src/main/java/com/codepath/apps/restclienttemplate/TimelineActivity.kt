@@ -1,8 +1,12 @@
 package com.codepath.apps.restclienttemplate
 
 import EndlessRecyclerViewScrollListener
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +65,23 @@ class TimelineActivity : AppCompatActivity() {
         }
         rvTweets.addOnScrollListener(scrollListener)
         populateHomeTimeline(false)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        return true
+    }
+
+    //handles clicks on menu item
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.compose) {
+            //Redirect user to compose activity
+            val intent = Intent(this, ComposeActivity::class.java)
+            startActivity(intent)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun populateHomeTimeline(isLoadMore: Boolean) {

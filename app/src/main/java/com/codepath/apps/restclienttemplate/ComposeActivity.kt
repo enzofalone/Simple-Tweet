@@ -1,6 +1,8 @@
 package com.codepath.apps.restclienttemplate
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -15,12 +17,13 @@ import com.codepath.apps.restclienttemplate.models.Tweet
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.Headers
+import java.io.*
 
 const val CHARACTER_LIMIT = 280
 class ComposeActivity : AppCompatActivity() {
     lateinit var etCompose: EditText
     lateinit var btnTweet: Button
-
+    lateinit var tvCount: TextView
     lateinit var client: TwitterClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +32,21 @@ class ComposeActivity : AppCompatActivity() {
 
         etCompose = findViewById(R.id.etTweetCompose)
         btnTweet = findViewById(R.id.btnTweet)
-
+        tvCount = findViewById<TextView>(R.id.tvCount)
         client = TwitterApplication.getRestClient(this)
 
+        //check if there is something saved as a draft
+        try {
+            val file = File(filesDir, "SavedTweet")
+            etCompose.setText(file.readText()) // Read file
+            Log.i(TAG,file.readText())
+            tvCount.text = "Characters left: ${CHARACTER_LIMIT - etCompose.text.toString().length}"
+        }catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         //Handle user's click on tweet button
-        btnTweet.setOnClickListener {
+        btnTweet.setOnClickListener { it ->
             //Grab the text user has inputted in the etTweetCompose layout
             val tweetContent = etCompose.text.toString()
 
@@ -57,6 +70,15 @@ class ComposeActivity : AppCompatActivity() {
             } else {
                     client.publishTweet(tweetContent, object : JsonHttpResponseHandler() {
                         override fun onSuccess(statusCode: Int, headers: Headers?, json: JSON) {
+                            //delete any drafts we had
+                            try {
+                                openFileOutput("SavedTweet", Context.MODE_PRIVATE).use {
+                                    it.write("".toByteArray())
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+
                             Log.i(TAG, "Tweet successfully published!")
 
                             val tweet = Tweet.fromJson(json.jsonObject)
@@ -79,8 +101,6 @@ class ComposeActivity : AppCompatActivity() {
             }
         }
         //Handle character count
-        val tvCount = findViewById<TextView>(R.id.tvCount)
-
         etCompose.addTextChangedListener(object : TextWatcher {
             val tweetContent = this.toString()
 
@@ -104,6 +124,42 @@ class ComposeActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onBackPressed() {
+        val text = etCompose.text.toString()
+        if(text.isNotEmpty()) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Tweet not published")
+                .setMessage("Would you like to save it as a draft?")
+                .setNegativeButton("No") { dialog, which ->
+                    //do nothing and go back
+                    super.onBackPressed()
+                }
+                .setPositiveButton("Yes") { dialog, which ->
+                    //respond to positive button press
+                    //save data
+                    try {
+                        this.openFileOutput("SavedTweet", Context.MODE_PRIVATE).use {
+                            it.write(text.toByteArray())
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    //go back
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "Draft saved successfully!",
+                        Snackbar.LENGTH_SHORT
+                    )
+                        .show()
+                    super.onBackPressed()
+                }
+            builder.create()
+            builder.show()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     companion object {

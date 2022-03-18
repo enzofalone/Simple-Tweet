@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/twitter_blue_30"
-    tools:context=".ComposeActivity">
+    android:background="#FAF9F6"
+    tools:context=".ComposeActivity"
+    android:fitsSystemWindows="true">
 
     <Button
         android:id="@+id/btnTweet"
@@ -15,6 +16,7 @@
         android:backgroundTint="@color/twitter_blue"
         android:layout_margin="20dp"
 
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etTweetCompose" />
 
@@ -22,17 +24,31 @@
         android:id="@+id/etTweetCompose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="What are you thinking about?"
+
         android:inputType="textMultiLine"
+
         android:minLines="5"
-
-        android:layout_margin="10dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Characters left: 280"
+        android:textAlignment="textStart"
+android:textColor="#808080"
+        android:layout_marginRight="15dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/btnTweet"
+        app:layout_constraintEnd_toStartOf="@+id/btnTweet"
+        app:layout_constraintTop_toTopOf="@+id/btnTweet" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

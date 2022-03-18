@@ -6,13 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.toColor
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.load.engine.Resource
 import com.codepath.apps.restclienttemplate.models.Tweet
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import okhttp3.Headers
 import org.json.JSONException
 
@@ -63,11 +67,27 @@ class TimelineActivity : AppCompatActivity() {
                 populateHomeTimeline(true)
             }
         }
+
+        //toolbar setup
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setLogo(R.drawable.logo48)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+
+        //compose button listener
+        val btnCompose = findViewById<FloatingActionButton>(R.id.compose)
+        btnCompose.setOnClickListener {
+            val intent = Intent(this, ComposeActivity::class.java)
+            startActivityForResult(intent, REQUEST_CODE)
+        }
+
         rvTweets.addOnScrollListener(scrollListener)
         populateHomeTimeline(false)
     }
 
-
+/*                  REMOVED COMPOSE BUTTON FROM TOOLBAR
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
@@ -78,11 +98,10 @@ class TimelineActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.compose) {
             //Redirect user to compose activity
-            val intent = Intent(this, ComposeActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE)
+
         }
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 
     //Method called back when the user comes from ComposeActivity
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
